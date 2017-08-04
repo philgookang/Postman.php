@@ -151,8 +151,8 @@ class Postman {
 		return $return_data;
 	}
 
-	function returnDataObject($query, $params) {
-		$list = $this->returnDataList($query, $params);
+	function executeObject($query, $params) {
+		$list = $this->executeList($query, $params);
 		return (isset($list[0])) ? $list[0] : new stdClass();
 	}
 }
