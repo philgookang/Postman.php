@@ -98,7 +98,7 @@ class TestCase {
         $fmt = 'iii';
 
         $status = 0;
-        $limit  = 4;
+        $limit  = 2;
         $offset = 0;
 
         $list = array($fmt, &$status, &$limit, &$offset);
@@ -107,9 +107,28 @@ class TestCase {
 
         var_dump($idx);
     }
+
+    public function getTotal() {
+
+        $query  = "SELECT ";
+        $query .=   "COUNT(*) as cnt ";
+        $query .= "FROM ";
+        $query .=   "`transaction_np` ";
+        $query .= "WHERE ";
+        $query .=   "`is_del`=? ";
+
+        $fmt = 'i';
+        $status = 0;
+        $list = array($fmt, &$status);
+
+        $idx = $this->postman->executeList($query, $list);
+
+        var_dump($idx);
+    }
 }
 
 $tc = new TestCase($host, $userid, $password, $database);
-// $tc->createByLoop();
-// $tc->createByPush();
+$tc->createByLoop();
+$tc->createByPush();
 $tc->getList();
+$tc->getTotal();
