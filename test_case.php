@@ -125,6 +125,24 @@ class TestCase {
 
         var_dump($idx);
     }
+
+    public function get() {
+
+        $query  = "SELECT ";
+        $query .=   "* ";
+        $query .= "FROM ";
+        $query .=   "`transaction_np` ";
+        $query .= "WHERE ";
+        $query .=   "`idx`=? ";
+
+        $fmt = 'i';
+        $idx = 1;
+        $list = array($fmt, &$idx);
+
+        $idx = $this->postman->executeObject($query, $list);
+
+        var_dump($idx);
+    }
 }
 
 $tc = new TestCase($host, $userid, $password, $database);
@@ -132,3 +150,4 @@ $tc->createByLoop();
 $tc->createByPush();
 $tc->getList();
 $tc->getTotal();
+$tc->get();
