@@ -23,7 +23,9 @@ Because we always want a single connection, we must call `Postman::getInstance()
             $database
         );
 
+
 **Execute Query**
+
 To make simple sql executions, call the `$postman->execute()` function directly. *Check test_case.php line 45*.
 
 	$result = $postman->execute(
@@ -31,7 +33,9 @@ To make simple sql executions, call the `$postman->execute()` function directly.
             /* Two dimentional array holding fmt and values to insert */
         );
 
+
 **Get List**
+
 If you need to return a list of data, do not call `$postman->execute()` directly, call `$postman->executeList()` fuction. *Check test_case.php line 87*.
 
     $list = $this->postman->executeList(
