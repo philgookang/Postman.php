@@ -2,33 +2,45 @@
 
 /***************************************************
  *
- * PHP Mysql Wrapper Class
+ * PHP Mysql Prepare Statement Wrapper Class
  * - supports prepare statment only
  * - for best practice, only uses group prepare statment
  *   through testing, group prepare statment increase average speed by 20%!!
  *
  * by phil goo kang
  *
+ * @category   Mysql Database
+ * @package    PHP
+ * @subpackage Client
+ * @version    1.0
+ * @license    http://www.apache.org/licenses/     Apache License
  ***************************************************/
 
 class Postman {
 
-	// any query taken over the set limit, we must log to optimization
+	/*
+	 * any query taken over the set limit, we must log to optimization
+	 */
 	private $max_time_diff = 0.04;
 
-    // should log
+    /*
+	 * check whether we should make any logs
+	 */
     private $should_log = false;
 
-    // show dev errors
-    private $show_dev_error = false;
-
-	// postman singleton
+	/*
+	 * postman singleton object
+	 */
 	private static $singleton;
 
-	// mysql connection, only access by this class
+	/*
+	 * the acutal mysql connection
+	 */
 	private $mysqlConnection;
 
-	// keeps record of last query summary
+	/*
+	 * keeps record of last query result summary
+	 */
 	public $last_query = array(
 		'query' 	=> '', // query statment
 		'run_time' 	=> '', // query run time
@@ -37,8 +49,9 @@ class Postman {
 
 	/**
 	 * Called automatically, don't need to do anything
+	 *
 	 */
-	function __destruct() {
+	public function __destruct() {
 
 		// check if we have a live connection
 		if ( $this->mysqlConnection != null ) {
@@ -50,6 +63,14 @@ class Postman {
 	 * Returns a Mysql Connection Instance.
 	 * - we do not want multiple mysql connections, so use a single static varbiable.
 	 * - automatically kill on run complete
+	 *
+	 * @param string host mysql server address
+	 * @param string mysql user id
+	 * @param string password to log into mysql
+	 * @param string mysql database to use
+	 * @param boolean whether to make logs durring ussage
+	 *
+	 * @return object Postman class object instance
 	 */
 	public static function getInstance( $host = '', $userid = '', $password = '', $database = '', $log_setting = false ) {
 
@@ -69,6 +90,14 @@ class Postman {
 	/**
 	 * Returns a mysql connection
 	 * - make in private because we want this to only be called one time
+	 *
+	 * @param string host mysql server address
+	 * @param string mysql user id
+	 * @param string password to log into mysql
+	 * @param string mysql database to use
+	 * @param boolean whether to make logs durring ussage
+	 *
+	 * @return object Mysql connection
 	 */
 	private function connect( $host, $userid , $password , $database , $log_setting ) {
 
@@ -96,6 +125,13 @@ class Postman {
 
 	/**
 	 * Binds the prepare statment variables to its question mark position
+	 * - since the number of binding elements and N,
+	 * - we use php call_to_func function to pass params as an prama array list
+	 *
+	 * @param object mysql prepared statment
+	 * @param array holding the fmt and values to be send to mysql
+	 *
+	 * @return boolean whether call function was successful
 	 */
 	private function _db_bind_param(&$stmt, $params) {
 		$f = array($stmt, "bind_param");
@@ -104,10 +140,19 @@ class Postman {
 
 	// -------------------------------------------------
 
+	/**
+	 * Prepares a mysql statment and binds the values
+	 *
+	 * @param string query string
+	 * @param array list_params holds the binding values
+	 * @param boolean whether to return the inserted idx value or return mysql results
+	 *
+	 * @return return results from query action
+	 */
 	public function execute($query, $list_params, $return_insert_idx = false) {
 
 		// $smt
-		$stmt = $this->mysqlConnection->stmt_init();
+		$this->mysqlConnection->stmt_init();
 		$stmt = $this->mysqlConnection->prepare($query);
 
 		// return list
@@ -135,7 +180,7 @@ class Postman {
 		return (count($return_list) > 1) ? $return_list : $return_list[0];
 	}
 
-	function executeList($query, $params) {
+	public function executeList($query, $params) {
 
 		$result = $this->execute($query, array($params));
 
@@ -151,7 +196,7 @@ class Postman {
 		return $return_data;
 	}
 
-	function executeObject($query, $params) {
+	public function executeObject($query, $params) {
 		$list = $this->executeList($query, $params);
 		return (isset($list[0])) ? $list[0] : new stdClass();
 	}
