@@ -16,22 +16,33 @@ Usage
 
 Because we always want a single connection, we must call `Postman::getInstance();` function. Fill in the host, userid, password and database to use. *Check test_case.php line 10*.
 
-	$postman = Postman::getInstance( $host, $userid, $password, $database );
+	$postman = Postman::getInstance(
+            $host,
+            $userid,
+            $password,
+            $database
+        );
 
 **Execute Query**
 To make simple sql executions, call the `$postman->execute()` function directly. *Check test_case.php line 45*.
 
-	$postman->execute(/* MySQL Query with ? in it. */, /* Two dimentional array holding fmt and values to insert */);
+	$result = $postman->execute(
+            /* MySQL Query with ? in it. */,
+            /* Two dimentional array holding fmt and values to insert */
+        );
 
 **Get List**
 If you need to return a list of data, do not call `$postman->execute()` directly, call `$postman->executeList()` fuction. *Check test_case.php line 87*.
 
-    $list = $this->postman->executeList(/* MySQL Query with ? in it. */, /* Two dimentional array holding fmt and values to insert */);
+    $list = $this->postman->executeList(
+            /* MySQL Query with ? in it. */,
+            /* Two dimentional array holding fmt and values to insert */
+        );
 
 
 Help
 ====
-For more information on how to use Mysql Prepare Statement then please visit: [http://php.net/manual/en/mysqli.quickstart.prepared-statements.php](http://php.net/manual/en/mysqli.quickstart.prepared-statements.php)
+For more information on how to use Mysql Prepare Statement then please visit: [http://php.net/manual/en/mysqli.quickstart.prepared-statements.php](PHP Manual)
 
 License
 =======
